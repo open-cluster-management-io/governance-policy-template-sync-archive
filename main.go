@@ -4,7 +4,6 @@
 package main
 
 import (
-	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -12,17 +11,15 @@ import (
 	"strings"
 
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
-
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
-	"github.com/open-cluster-management/governance-policy-template-sync/pkg/apis"
-	"github.com/open-cluster-management/governance-policy-template-sync/pkg/controller"
+	policiesv1 "github.com/open-cluster-management/governance-policy-propagator/api/v1"
+	synccontrollers "github.com/open-cluster-management/governance-policy-template-sync/controllers"
 	"github.com/open-cluster-management/governance-policy-template-sync/version"
 
-	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
-	"github.com/operator-framework/operator-sdk/pkg/leader"
-	sdkVersion "github.com/operator-framework/operator-sdk/version"
 	"github.com/spf13/pflag"
+	k8sruntime "k8s.io/apimachinery/pkg/runtime"
+	utilruntime "k8s.io/apimachinery/pkg/util/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/cache"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -31,17 +28,30 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
 
-var log = logf.Log.WithName("cmd")
+var (
+	log    = logf.Log.WithName("setup")
+	scheme = k8sruntime.NewScheme()
+)
 
 func printVersion() {
 	log.Info(fmt.Sprintf("Operator Version: %s", version.Version))
 	log.Info(fmt.Sprintf("Go Version: %s", runtime.Version()))
 	log.Info(fmt.Sprintf("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH))
-	log.Info(fmt.Sprintf("Version of operator-sdk: %v", sdkVersion.Version))
+}
+
+func init() {
+	utilruntime.Must(policiesv1.AddToScheme(scheme))
 }
 
 func main() {
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
+
+	var enableLeaderElection, legacyLeaderElect bool
+	pflag.BoolVar(&enableLeaderElection, "leader-elect", true,
+		"Enable leader election for controller manager. "+
+			"Enabling this will ensure there is only one active controller manager.")
+	pflag.BoolVar(&legacyLeaderElect, "legacy-leader-elect", false,
+		"Use a legacy leader election method for controller manager instead of the lease API.")
 
 	pflag.Parse()
 
@@ -49,7 +59,7 @@ func main() {
 
 	printVersion()
 
-	namespace, err := k8sutil.GetWatchNamespace()
+	namespace, err := getWatchNamespace()
 	if err != nil {
 		log.Error(err, "Failed to get watch namespace")
 		os.Exit(1)
@@ -62,18 +72,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	ctx := context.TODO()
-	// Become the leader before proceeding
-	err = leader.Become(ctx, "policy-template-sync-lock")
-	if err != nil {
-		log.Error(err, "")
-		os.Exit(1)
-	}
-
 	// Set default manager options
 	options := manager.Options{
+		Scheme:             scheme,
 		Namespace:          namespace,
 		MetricsBindAddress: "0",
+		LeaderElection:     enableLeaderElection,
+		LeaderElectionID:   "governance-policy-template-sync.open-cluster-management.io",
 	}
 
 	// Add support for MultiNamespace set in WATCH_NAMESPACE (e.g ns1,ns2)
@@ -85,6 +90,12 @@ func main() {
 		options.NewCache = cache.MultiNamespacedCacheBuilder(strings.Split(namespace, ","))
 	}
 
+	if legacyLeaderElect {
+		// If legacyLeaderElection is enabled, then that means the lease API is not available.
+		// In this case, use the legacy leader election method of a ConfigMap.
+		options.LeaderElectionResourceLock = "configmaps"
+	}
+
 	// Create a new manager to provide shared dependencies and start components
 	mgr, err := manager.New(managedCfg, options)
 	if err != nil {
@@ -94,15 +105,14 @@ func main() {
 
 	log.Info("Registering Components.")
 
-	// Setup Scheme for all resources
-	if err := apis.AddToScheme(mgr.GetScheme()); err != nil {
-		log.Error(err, "")
-		os.Exit(1)
-	}
-
 	// Setup all Controllers
-	if err := controller.AddToManager(mgr); err != nil {
-		log.Error(err, "")
+	if err := (&synccontrollers.PolicyReconciler{
+		Client:   mgr.GetClient(),
+		Scheme:   mgr.GetScheme(),
+		Config:   mgr.GetConfig(),
+		Recorder: mgr.GetEventRecorderFor(synccontrollers.ControllerName),
+	}).SetupWithManager(mgr); err != nil {
+		log.Error(err, "unable to create controller", "controller", synccontrollers.ControllerName)
 		os.Exit(1)
 	}
 
@@ -113,4 +123,18 @@ func main() {
 		log.Error(err, "Manager exited non-zero")
 		os.Exit(1)
 	}
+}
+
+// WatchNamespaceEnvVar is the constant for env variable WATCH_NAMESPACE
+// which specifies the Namespace to watch.
+// An empty value means the operator is running with cluster scope.
+const watchNamespaceEnvVar = "WATCH_NAMESPACE"
+
+// GetWatchNamespace returns the Namespace the operator should be watching for changes
+func getWatchNamespace() (string, error) {
+	ns, found := os.LookupEnv(watchNamespaceEnvVar)
+	if !found {
+		return "", fmt.Errorf("%s must be set", watchNamespaceEnvVar)
+	}
+	return ns, nil
 }
