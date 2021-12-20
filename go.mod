@@ -16,10 +16,10 @@ require (
 require (
 	cloud.google.com/go v0.54.0 // indirect
 	github.com/Azure/go-autorest v14.2.0+incompatible // indirect
-	github.com/Azure/go-autorest/autorest v0.11.12 // indirect
-	github.com/Azure/go-autorest/autorest/adal v0.9.5 // indirect
+	github.com/Azure/go-autorest/autorest v0.11.18 // indirect
+	github.com/Azure/go-autorest/autorest/adal v0.9.13 // indirect
 	github.com/Azure/go-autorest/autorest/date v0.3.0 // indirect
-	github.com/Azure/go-autorest/logger v0.2.0 // indirect
+	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
@@ -90,5 +90,5 @@ replace (
 	github.com/go-logr/logr v0.2.0 => github.com/go-logr/logr v0.2.1
 	github.com/go-logr/zapr => github.com/go-logr/zapr v0.2.0
 	github.com/gogo/protobuf => github.com/gogo/protobuf v1.3.2
-	k8s.io/client-go => k8s.io/client-go v0.21.3
+	k8s.io/client-go => k8s.io/client-go v0.22.1
 )
