@@ -13,9 +13,9 @@ import (
 	// Import all Kubernetes client auth plugins (e.g. Azure, GCP, OIDC, etc.)
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
-	policiesv1 "github.com/open-cluster-management/governance-policy-propagator/api/v1"
-	synccontrollers "github.com/open-cluster-management/governance-policy-template-sync/controllers"
-	"github.com/open-cluster-management/governance-policy-template-sync/version"
+	policiesv1 "open-cluster-management.io/governance-policy-propagator/api/v1"
+	synccontrollers "open-cluster-management.io/governance-policy-template-sync/controllers"
+	"open-cluster-management.io/governance-policy-template-sync/version"
 
 	"github.com/spf13/pflag"
 	k8sruntime "k8s.io/apimachinery/pkg/runtime"
