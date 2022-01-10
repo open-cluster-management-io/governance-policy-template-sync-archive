@@ -21,8 +21,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 
-	synccontrollers "github.com/open-cluster-management/governance-policy-template-sync/controllers"
-	"github.com/open-cluster-management/governance-policy-template-sync/version"
+	synccontrollers "open-cluster-management.io/governance-policy-template-sync/controllers"
+	"open-cluster-management.io/governance-policy-template-sync/version"
 )
 
 var (
