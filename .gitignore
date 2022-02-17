@@ -89,4 +89,5 @@ OPENSOURCE.check
 report.json
 .go/
 bin/
+vendor/
 
