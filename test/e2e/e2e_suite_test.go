@@ -21,19 +21,18 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	"open-cluster-management.io/governance-policy-propagator/test/utils"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 )
 
 var (
-	testNamespace             string
-	clientManaged             kubernetes.Interface
-	clientManagedDynamic      dynamic.Interface
-	gvrPolicy                 schema.GroupVersionResource
-	gvrEvent                  schema.GroupVersionResource
-	gvrTrustedContainerPolicy schema.GroupVersionResource
-	defaultTimeoutSeconds     int
+	testNamespace          string
+	clientManaged          kubernetes.Interface
+	clientManagedDynamic   dynamic.Interface
+	gvrPolicy              schema.GroupVersionResource
+	gvrEvent               schema.GroupVersionResource
+	gvrConfigurationPolicy schema.GroupVersionResource
+	defaultTimeoutSeconds  int
 
 	defaultImageRegistry string
 )
@@ -56,10 +55,10 @@ var _ = BeforeSuite(func() {
 		Version:  "v1",
 		Resource: "policies",
 	}
-	gvrTrustedContainerPolicy = schema.GroupVersionResource{
-		Group:    "policies.ibm.com",
-		Version:  "v1alpha1",
-		Resource: "trustedcontainerpolicies",
+	gvrConfigurationPolicy = schema.GroupVersionResource{
+		Group:    "policy.open-cluster-management.io",
+		Version:  "v1",
+		Resource: "configurationpolicies",
 	}
 	gvrEvent = schema.GroupVersionResource{Group: "", Version: "v1", Resource: "events"}
 	clientManaged = NewKubeClient("", "", "")
@@ -77,9 +76,6 @@ var _ = BeforeSuite(func() {
 			},
 		}, metav1.CreateOptions{})).NotTo(BeNil())
 	}
-	By("Create trustedcontainerpolicy CRD")
-	_, err := utils.KubectlWithOutput("apply", "-f", "../resources/policies.ibm.com_trustedcontainerpolicies_crd.yaml")
-	Expect(err).Should(BeNil())
 })
 
 func NewKubeClient(url, kubeconfig, context string) kubernetes.Interface {

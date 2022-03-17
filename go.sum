@@ -111,6 +111,7 @@ github.com/aryann/difflib v0.0.0-20170710044230-e206f873d14a/go.mod h1:DAHtR1m6l
 github.com/asaskevich/govalidator v0.0.0-20180720115003-f9ffefc3facf/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=
 github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a/go.mod h1:lB+ZfQJz7igIIfQNfa7Ml4HSf2uFQQRzpGGRXenZAgY=
 github.com/asaskevich/govalidator v0.0.0-20200428143746-21a406dcc535/go.mod h1:oGkLhpf+kjZl6xBf758TQhh5XrAeiJv/7FRz/2spLIg=
+github.com/avast/retry-go/v3 v3.1.1 h1:49Scxf4v8PmiQ/nY0aY3p0hDueqSmc7++cBbtiDGu2g=
 github.com/avast/retry-go/v3 v3.1.1/go.mod h1:6cXRK369RpzFL3UQGqIUp9Q7GDrams+KsYWrfNA1/nQ=
 github.com/aws/aws-lambda-go v1.13.3/go.mod h1:4UKl9IzQMoD+QF79YdCuzCwp8VbmG4VAQwij/eHl5CU=
 github.com/aws/aws-sdk-go v1.15.11/go.mod h1:mFuSZ37Z9YOHbQEwBWztmVzqXrEkub65tZoCYDt7FT0=
@@ -1712,11 +1713,13 @@ open-cluster-management.io/api v0.5.1-0.20211109002058-9676c7a1e606 h1:j/BHFMHX0
 open-cluster-management.io/api v0.5.1-0.20211109002058-9676c7a1e606/go.mod h1:9qiA5h/8kvPQnJEOlAPHVjRO9a1jCmDhGzvgMBvXEaE=
 open-cluster-management.io/api v0.6.0 h1:PzR1G/d9YmwL742lgJgFgsEJs6i8Zg05pdIhK/iLZV4=
 open-cluster-management.io/api v0.6.0/go.mod h1:0IUTh8J+p4pv1THh1r9oO0luX9Z1FLDEAmvzW09qC0o=
+open-cluster-management.io/api v0.6.1-0.20220208144021-3297cac74dc5 h1:0Zn4+5qfXTHCjoa7pg8+fI/Gebr4bQDHWR+d1XPa47c=
 open-cluster-management.io/api v0.6.1-0.20220208144021-3297cac74dc5/go.mod h1:0IUTh8J+p4pv1THh1r9oO0luX9Z1FLDEAmvzW09qC0o=
 open-cluster-management.io/governance-policy-propagator v0.5.1-0.20211220161230-0e35d5833c52 h1:3NiFzwor4+gaGQw85TKy4jwQeLB0Pm1PArNRQcP7BZc=
 open-cluster-management.io/governance-policy-propagator v0.5.1-0.20211220161230-0e35d5833c52/go.mod h1:Y8GaWLAdLqI7c5g9Sald/rQE+CT9C6R+3TNOjKhp2LI=
 open-cluster-management.io/governance-policy-propagator v0.6.0 h1:SJUjSmsPoQQbf3xXhVxTJ7ZOra2ZBxSIKukte8SRiHE=
 open-cluster-management.io/governance-policy-propagator v0.6.0/go.mod h1:Y8GaWLAdLqI7c5g9Sald/rQE+CT9C6R+3TNOjKhp2LI=
+open-cluster-management.io/governance-policy-propagator v0.6.1-0.20220329192459-17e81c48ea1d h1:SaenaCV/XWDWbFpTI4/BWLIrfUEYo/YQvYWM7MZ6qrM=
 open-cluster-management.io/governance-policy-propagator v0.6.1-0.20220329192459-17e81c48ea1d/go.mod h1:eyO8fEVlYnjLq/PVKewEbL025xC1al1zaIYuwhXLo9I=
 open-cluster-management.io/multicloud-operators-channel v0.4.1-0.20211019174739-f906eb7328a6/go.mod h1:7WI7xQEkDCGoFO8vs+fybnj3b/ebSRlhrfHYmXFFaOk=
 open-cluster-management.io/multicloud-operators-channel v0.5.1-0.20211122200432-da1610291798/go.mod h1:ELKJ1LHadEYbYHEeWrZXC8zAHrzXzzKJRtp/7D1WlmU=

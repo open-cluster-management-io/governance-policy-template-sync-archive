@@ -5,14 +5,14 @@ go 1.17
 require (
 	github.com/go-logr/zapr v1.2.3
 	github.com/onsi/ginkgo/v2 v2.1.3
-	github.com/onsi/gomega v1.17.0
+	github.com/onsi/gomega v1.18.1
 	github.com/spf13/pflag v1.0.5
 	k8s.io/api v0.23.3
 	k8s.io/apimachinery v0.23.3
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/klog/v2 v2.40.1
-	open-cluster-management.io/governance-policy-propagator v0.6.0
-	sigs.k8s.io/controller-runtime v0.9.4
+	open-cluster-management.io/governance-policy-propagator v0.6.1-0.20220329192459-17e81c48ea1d
+	sigs.k8s.io/controller-runtime v0.11.1
 )
 
 require (
@@ -23,6 +23,7 @@ require (
 	github.com/Azure/go-autorest/autorest/date v0.3.0 // indirect
 	github.com/Azure/go-autorest/logger v0.2.1 // indirect
 	github.com/Azure/go-autorest/tracing v0.6.0 // indirect
+	github.com/avast/retry-go/v3 v3.1.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
