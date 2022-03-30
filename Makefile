@@ -52,11 +52,16 @@ endif
 KIND_NAME ?= test-managed
 KIND_NAMESPACE ?= open-cluster-management-agent-addon
 KIND_VERSION ?= latest
+MANAGED_CLUSTER_NAME ?= managed
+WATCH_NAMESPACE ?= $(MANAGED_CLUSTER_NAME)
 ifneq ($(KIND_VERSION), latest)
 	KIND_ARGS = --image kindest/node:$(KIND_VERSION)
 else
 	KIND_ARGS =
 endif
+# Fetch Ginkgo/Gomega versions from go.mod
+GINKGO_VERSION := $(shell awk '/github.com\/onsi\/ginkgo\/v2/ {print $$2}' go.mod)
+GOMEGA_VERSION := $(shell awk '/github.com\/onsi\/gomega/ {print $$2}' go.mod)
 
 LOCAL_OS := $(shell uname)
 ifeq ($(LOCAL_OS),Linux)
@@ -239,18 +244,18 @@ kind-delete-cluster:
 install-crds:
 	@echo installing crds
 	kubectl apply -f https://raw.githubusercontent.com/open-cluster-management-io/governance-policy-propagator/$(BRANCH)/deploy/crds/policy.open-cluster-management.io_policies.yaml
-	kubectl apply -f https://raw.githubusercontent.com/open-cluster-management-io/governance-policy-propagator/$(BRANCH)/deploy/crds/policy.open-cluster-management.io_configurationpolicies.yaml
+	kubectl apply -f https://raw.githubusercontent.com/open-cluster-management-io/config-policy-controller/$(BRANCH)/deploy/crds/policy.open-cluster-management.io_configurationpolicies.yaml
 
 install-resources:
 	@echo creating namespaces
-	kubectl create ns managed
+	kubectl create ns $(WATCH_NAMESPACE)
 
 e2e-test:
 	ginkgo -v --slowSpecThreshold=10 test/e2e
 
 e2e-dependencies:
-	go get github.com/onsi/ginkgo/ginkgo@v1.16.4
-	go get github.com/onsi/gomega/...@v1.13.0
+	go get github.com/onsi/ginkgo/v2/ginkgo@$(GINKGO_VERSION)
+	go get github.com/onsi/gomega/...@$(GOMEGA_VERSION)
 
 e2e-debug:
 	kubectl get all -n $(KIND_NAMESPACE)
