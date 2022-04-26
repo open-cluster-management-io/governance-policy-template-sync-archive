@@ -8,7 +8,11 @@ The governance policy template sync runs on managed clusters and updates objects
 
 This operator watches for changes on `Policies` in the cluster namespace on the managed cluster to trigger a reconcile. On each reconcile, it creates/updates/deletes objects defined in the `spec.policy-templates` of those `Policies`.
 
-## Geting started 
+## Geting started
+
+Go to the
+[Contributing guide](https://github.com/open-cluster-management-io/community/blob/main/sig-policy/contribution-guidelines.md)
+to learn how to get involved.
 
 Check the [Security guide](SECURITY.md) if you need to report a security issue.
 
